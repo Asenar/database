@@ -172,6 +172,46 @@ abstract class Kohana_Database_Result implements Countable, Iterator, SeekableIt
 	}
 
 	/**
+	 * Return all of the rows in the result as an array indexed by column number.
+	 *
+	 *     // Number indexed array of all rows
+	 *     $rows = $result->as_num();
+	 *
+	 *     // Number indexed array of rows by "id"
+	 *     $rows = $result->as_num('id');
+	 *
+	 * @param   string  $key    column for associative keys
+	 * @return  array
+	 */
+	public function as_num($key = NULL)
+	{
+		$results = array();
+
+		if ($key === NULL)
+		{
+			// Indexed rows
+
+			foreach ($this as $row)
+			{
+				$results[] = array_values($row);
+			}
+		}
+		else
+		{
+			// Associative rows
+
+			foreach ($this as $row)
+			{
+				$results[$row[$key]] = array_values($row);
+			}
+		}
+
+		$this->rewind();
+
+		return $results;
+	}
+
+	/**
 	 * Return the named column from the current row.
 	 *
 	 *     // Get the "id" value

@@ -66,6 +66,28 @@ To return a non-associative array, leave `$key` as NULL and just pass a `$value`
 		echo 'User Email: '.$email;
 	}
 
+### Select - `as_num()`
+
+You may need a set of results indexed by column number rather than the field name. The `Database_Result` method `as_num()` will return an array of all rows.
+
+	$results = DB::select('id', 'email')->from('users')->execute();
+	$users = $results->as_num();
+	foreach($users as $user)
+	{
+		echo 'User ID: '.$user[0];
+		echo 'User Email: '.$user[1];
+	}
+
+This method accepts one parameter `$key`, similar to `as_array()`. When passing a value to `$key` you will index the resulting array by the column specified.
+
+	$results = DB::select('id', 'email')->from('users')->execute();
+	$users = $results->as_num('id');
+	foreach($users as $id => $user)
+	{
+		echo 'User ID: '.$id;
+		echo 'User Email: '.$user[1];
+	}
+
 ### Select - `get()`
 
 Sometime you only want a single value from a query. The `get()` method returns the value of the named column from the current row. The second parameter, `$default`, is used to supply a default value when the result is NULL.
